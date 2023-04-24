@@ -1,0 +1,35 @@
+---
+title: "Almond Yield Anomoly Model"
+author: "Grace Bianchi & Sarah Lam"
+date: "2023-04-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+```{r}
+#read in the data 
+climate <- read.table(here("data", "clim.txt")) %>% 
+  row_to_names(row_number = 1) %>% 
+  mutate_all(as.numeric)
+
+feb_temp <- climate %>% 
+  filter(month == 2)
+
+feb_min <- min(feb_temp$tmin_c)
+feb_max <- max(feb_temp$tmin_c)
+
+jan_precip <- climate %>% 
+  filter(month == 1)
+
+jan_total <- sum(jan_precip$precip)
+```
+
+
+
