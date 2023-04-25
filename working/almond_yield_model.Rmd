@@ -13,31 +13,26 @@ library(here)
 library(janitor)
 ```
 
+![Conceptual model of Almond Yield Anomalies](../data/EDS230_a2.png)
+
 ```{r}
 #read in the data 
 climate <- read.table(here("data", "clim.txt")) %>% 
   row_to_names(row_number = 1) %>% 
   mutate_all(as.numeric) 
-
-feb_temp <- climate %>% 
-  filter(month == 2)
-
-feb_min <- min(feb_temp$tmin_c)
-feb_max <- max(feb_temp$tmin_c)
-
-jan_precip <- climate %>% 
-  filter(month == 1) 
-
-jan_total <- sum(jan_precip$precip)
-
-# test function
-almond_modelR(climate, 2000)
-
 ```
 
-
-the maximum almond yield anomaly should be approximately 1920 ton/acre
-the lowest almond yield anomaly should be approximately -0.027 ton/acre
-the mean almond yield anomaly should be approximately 182 ton/acre
+```{r}
+#source function
+source(here("R", "almond_modelR.R"))
+```
+ 
+```{r}
+#run function on climate data 
+yield_anomaly <- almond_modelR(clim_data = climate)
+yield_anomaly
+```
+ 
+ 
 
 
