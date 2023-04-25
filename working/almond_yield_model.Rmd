@@ -33,6 +33,20 @@ yield_anomaly <- almond_modelR(clim_data = climate)
 yield_anomaly
 ```
  
+```{r}
+#sensitivity analysis 
+
+pcoeff_sample <- rnorm(mean=0.07, sd = 0.01, n=20)
+
+pcoeff_sensitivity <- pcoeff_sample %>% 
+  map(~almond_modelR(clim_data = climate, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pcoeff1 = .x, pcoeff2 = 0.0043))
+
+head(pcoeff_sensitivity)
+```
  
+```{r}
+#extract useful data
+precip_yield_test <- data.frame(year = tmp$annual$year, elect= tmp$annual$elect)
+```
 
 
