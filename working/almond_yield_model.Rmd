@@ -36,6 +36,8 @@ almond_modelR(climate, 2000)
 ```
 
 
-he maximum almond yield anomaly should be approximately 1920 ton/acre
+the maximum almond yield anomaly should be approximately 1920 ton/acre
 the lowest almond yield anomaly should be approximately -0.027 ton/acre
 the mean almond yield anomaly should be approximately 182 ton/acre
+
+

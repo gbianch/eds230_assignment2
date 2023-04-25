@@ -1,8 +1,8 @@
 #' Almond Yield Anonomoly Model
 #' 
 #' This function models almond yield anomaly in response to climate
-#' @param temp is the minimum temperature in February (C),
-#' @param precip is total precipitation (mm),
+#' @param clim_data is the numeric data frame of climate data,
+#' @param yr is the time series year to pull the temp and precipitation data,
 #' @return almond yield (ton acre^-1)
 #'
 # function definition
@@ -24,6 +24,7 @@ almond_modelR = function(clim_data, yr) {
   
   max_yield = (-0.015*min(feb_temp)) - (0.0046*min(feb_temp)^2) - (0.07*jan_total) + (0.0043*jan_total^2) + 0.28
   min_yield = (-0.015*max(feb_temp)) - (0.0046*max(feb_temp)^2) - (0.07*jan_total) + (0.0043*jan_total^2) + 0.28
+  mean_yield = (-0.015*mean(feb_temp, na.rm = TRUE)) - (0.0046*mean(feb_temp, na.rm = TRUE)^2) - (0.07*jan_total) + (0.0043*jan_total^2) + 0.28
  
-  return(list(max_yield, min_yield))
+  return(list(max_yield, min_yield, mean_yield))
 }
