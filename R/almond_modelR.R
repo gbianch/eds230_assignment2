@@ -6,7 +6,7 @@
 #' @return almond yield (ton acre^-1)
 #'
 # function definition
-almond_modelR = function(clim_data) {
+almond_modelR = function(clim_data, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pcoeff1 = 0.07, pcoeff2 = 0.0043) {
   
   clim_data <- clim_data %>% 
     group_by(month, year) %>% 
@@ -18,10 +18,10 @@ almond_modelR = function(clim_data) {
     select(temp_min)
   
   jan_precip <- clim_data %>% 
-                      select(total_precip) %>% 
-                      filter(month == 1)
+    select(total_precip) %>% 
+    filter(month == 1)
   
- yield = (0.015*feb_temp$temp_min - 0.0046*feb_temp$temp_min^2 - 0.07*jan_precip$total_precip + 0.0043*jan_precip$total_precip^2 + 0.28)
+ yield = (tmincoeff1*feb_temp$temp_min - tmincoeff2*feb_temp$temp_min^2 - pcoeff1*jan_precip$total_precip + pcoeff2*jan_precip$total_precip^2 + 0.28)
   
  # max_yield = (-0.015*min(feb_temp$temp_min)) - (0.0046*min(feb_temp$temp_min)^2) - (0.07*jan_precip) + (0.0043*jan_precip^2) + 0.28
  # min_yield = (-0.015*max(feb_temp$temp_min)) - (0.0046*max(feb_temp$temp_min)^2) - (0.07*jan_precip) + (0.0043*jan_precip^2) + 0.28
