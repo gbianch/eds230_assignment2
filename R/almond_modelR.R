@@ -23,7 +23,7 @@ almond_modelR = function(clim_data, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pco
   
  yield = (tmincoeff1*feb_temp$temp_min - tmincoeff2*feb_temp$temp_min^2 - pcoeff1*jan_precip$total_precip + pcoeff2*jan_precip$total_precip^2 + 0.28)
   
- 
-  return(data.frame(max_yield = max(yield), min_yield=min(yield), mean_yield=mean(yield)))
+ #return(list(annual=annualsolar[,c("year","elect")], mean=mean(annualsolar$elect)))
+  return(list(max_yield = max(yield), min_yield=min(yield), mean_yield=mean(yield)))
 }
 

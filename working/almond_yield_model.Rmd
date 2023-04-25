@@ -42,11 +42,13 @@ pcoeff_sensitivity <- pcoeff_sample %>%
   map(~almond_modelR(clim_data = climate, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pcoeff1 = .x, pcoeff2 = 0.0043))
 
 head(pcoeff_sensitivity)
+
 ```
  
 ```{r}
 #extract useful data
-precip_yield_test <- data.frame(year = tmp$annual$year, elect= tmp$annual$elect)
+tmp = map_df(pcoeff_sensitivity, `[`, c("mean_yield", "min_yield", "max_yield"))
+site2df = data.frame(mean = tmp$mean_yield, min=tmp$min_yield)
 ```
 
 
