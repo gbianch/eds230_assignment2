@@ -20,10 +20,11 @@ almond_modelR = function(clim_data, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pco
   jan_precip <- annual_data %>% 
     filter(month == 1) %>% 
     select(total_precip, year)
-  
- yield = (tmincoeff1*feb_temp$temp_min - tmincoeff2*feb_temp$temp_min^2 - pcoeff1*jan_precip$total_precip + pcoeff2*jan_precip$total_precip^2 + 0.28)
+  year = feb_temp$year
+  yield = (tmincoeff1*feb_temp$temp_min - tmincoeff2*feb_temp$temp_min^2 - pcoeff1*jan_precip$total_precip + pcoeff2*jan_precip$total_precip^2 + 0.28)
+  return(data.frame(yield, row.names = year))
   
  #return(list(annual=annualsolar[,c("year","elect")], mean=mean(annualsolar$elect)))
-  return(list(max_yield = max(yield), min_yield=min(yield), mean_yield=mean(yield)))
+ #return(list(max_yield = max(yield), min_yield=min(yield), mean_yield=mean(yield)))
 }
 

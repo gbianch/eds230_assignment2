@@ -44,7 +44,8 @@ head(pcoeff_sensitivity)
  
 ```{r}
 #extract useful data
-tmp = map_df(pcoeff_sensitivity, `[`, c("mean_yield", "min_yield", "max_yield"))
+#tmp = map_df(pcoeff_sensitivity, `[`, c("mean_yield", "min_yield", "max_yield"))
+
 site2df = data.frame(mean = tmp$mean_yield, min=tmp$min_yield)
 ```
 
