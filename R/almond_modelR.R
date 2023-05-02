@@ -6,7 +6,7 @@
 #' @return almond yield (ton acre^-1)
 #'
 # function definition
-almond_modelR = function(clim_data, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pcoeff1 = 0.07, pcoeff2 = 0.0043) {
+almond_modelR = function(clim_data, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pcoeff1 = 0.07, pcoeff2 = 0.0043, price = 5.95) {
   source(here("R", "almond_profit.R"))
   
   annual_data <- climate %>% 
@@ -23,7 +23,7 @@ almond_modelR = function(clim_data, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pco
     select(total_precip, year)
   year = feb_temp$year
   yield = (tmincoeff1*feb_temp$temp_min - tmincoeff2*feb_temp$temp_min^2 - pcoeff1*jan_precip$total_precip + pcoeff2*jan_precip$total_precip^2 + 0.28)
-  profit = almond_profit(yield_anom = yield)
+  profit = almond_profit(yield_anom = yield, price)
   return(data.frame(yield, "year" = year, profit))
   
  #return(list(annual=annualsolar[,c("year","elect")], mean=mean(annualsolar$elect)))

@@ -32,11 +32,10 @@ yield_anomaly <- almond_modelR(clim_data = climate)
  
 ```{r}
 #sensitivity analysis for p coefficient
-#pcoeff_sample <- rnorm(mean=0.07, sd = 0.01, n=20)
 
 deviation = 0.02
 base_pcoeff = 0.07
-pcoeff1 = runif(min=base_pcoeff-deviation*base_pcoeff, 
+pcoeff1 <- runif(min=base_pcoeff-deviation*base_pcoeff, 
                 max = base_pcoeff+deviation*base_pcoeff, n=20)
 
 
@@ -48,26 +47,44 @@ pcoeff_df = map_df(pcoeff_sensitivity,`[`, c("yield", "year", "profit"))
 pcoeff_df$pcoeff = pcoeff1
 
 ## sensitivity analysis for tcoeff1
-#tcoeff1_sample <- rnorm(mean=0.015, sd = 0.02, n=20)
 
 deviation = 0.02
 base_tcoeff = 0.015
-tcoeff1 = runif(min=base_tcoeff-deviation*base_tcoeff, 
+tcoeff1 <-  runif(min=base_tcoeff-deviation*base_tcoeff, 
                 max = base_tcoeff+deviation*base_tcoeff, n=20)
 
 tcoeff1_sensitivity <- tcoeff1 %>% 
   map(~almond_modelR(clim_data = climate, tmincoeff1 = .x, tmincoeff2 = 0.0046, pcoeff1 = 0.07, pcoeff2 = 0.0043)) 
 
-tcoeff_df = map_df(tcoeff1_sensitivity,`[`, c("yield", "year", "profit")) 
+tcoeff_df <- map_df(tcoeff1_sensitivity,`[`, c("yield", "year", "profit")) 
 # add column
 tcoeff_df$tcoeff = tcoeff1
+
+## sensitivity analysis for price of almonds
+
+price_deviation = 0.05
+base_price = 5.95
+price_var <- runif(min=base_price-price_deviation*base_price, 
+                max = base_price+price_deviation*base_price, n=20)
+
+price_sensitivity <- price_var %>% 
+  map(~almond_modelR(clim_data = climate, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pcoeff1 = 0.07, pcoeff2 = 0.0043, price = .x)) 
+
+price_df <- map_df(price_sensitivity,`[`, c("yield", "year", "profit")) %>% 
+  mutate(year = as.factor(year))
 ```
  
 
-
 ```{r}
+# visualize first p coefficient sensitivity
+ggplot(pcoeff_df, aes(y = profit, x = pcoeff)) +
+  geom_point() +
+  labs(x="pcoeff")
 
-ggplot(pcoeff_df, aes(y = profit, x = pcoeff))+geom_point()+labs(x="pcoeff")
-
+# visualize price sensitivity
+ggplot(price_df, aes(y = profit, x = year)) +
+  geom_boxplot() +
+  labs(x = "year", 
+       caption = "The figure shows the profit variability for each year based on changes in price/kg of almonds. The figure suggests that almond price may not be the most sensitive variable in the model and another variable such as percipitation may have a larger impact on the model.")
 ```
 
