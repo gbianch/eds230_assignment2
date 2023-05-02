@@ -2,7 +2,7 @@
 #' 
 #' This function models almond profits based on almond yield anomaly in response to climate
 #' @param yield_anom is the yield anomaly calculated by almond_modelR() from climate data,
-#' @param P is the market price of almonds ($/kg),
+#' @param price is the market price of almonds ($/kg),
 #' @return almond yield (ton acre^-1)
 #'
 # function definition
