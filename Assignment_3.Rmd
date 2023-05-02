@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(here)
 library(janitor)
+library(patchwork)
 ```
 
 ```{r}
@@ -65,7 +66,7 @@ tcoeff_df$tcoeff = tcoeff1
 ## sensitivity analysis for price of almonds
 
 price_deviation = 0.05
-base_price = 5.95
+base_price = 5.95  # $/ton/acre 
 price_var <- runif(min=base_price-price_deviation*base_price, 
                 max = base_price+price_deviation*base_price, n=20)
 
@@ -73,7 +74,9 @@ price_sensitivity <- price_var %>%
   map(~almond_modelR(clim_data = climate, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pcoeff1 = 0.07, pcoeff2 = 0.0043, price = .x)) 
 
 price_df <- map_df(price_sensitivity,`[`, c("yield", "year", "profit")) %>% 
-  mutate(year = as.factor(year))
+  mutate(year = as.factor(year)) 
+
+
 ```
  
 
@@ -84,21 +87,25 @@ price_df <- map_df(price_sensitivity,`[`, c("yield", "year", "profit")) %>%
   #labs(x="pcoeff")
 
 #visualize first temperature coefficient sensitivity
-ggplot(tcoeff_df, aes(y = profit, x = tcoeff)) +
+p1 <- ggplot(data = tcoeff_df, aes(y = profit, x = tcoeff)) +
   geom_point(aes(color = year)) +
-  labs(x="temperature coefficient 1")
-
+  labs(x="temperature coefficient 1") 
 ```
 
-The figure shows almond profits plotted against the distribution of potential values for the first temperature coefficient in the almond yield model. The figure shows some grouping in profits by year with high profits where expected, such as in 1995 which coincides with high precipitation. However, the high profit years also show a drop off in profit at either the high or low end of the coefficient values, which may suggest that there is another variable we should look at for model sensitivity.
+
 
 ```{r}
 # visualize price sensitivity
-ggplot(price_df, aes(y = profit, x = year)) +
+p2 <- ggplot(price_df, aes(y = profit, x = year)) +
   geom_boxplot() +
-  labs(x = "year")
-```
+  labs(x = "year") +
+  scale_x_discrete(breaks= seq(1989, 2010, 5))
 
-The figure shows the profit variability for each year based on changes in price/kg of almonds. The figure suggests that almond price may not be the most sensitive variable in the model and another variable such as precipitation may have a larger impact on the model.
+p1+p2 + plot_layout(ncol= 1) + plot_annotation(tag_levels = "A")
+
+```
+A. The figure shows almond profits plotted against the distribution of potential values for the first temperature coefficient in the almond yield model. The figure shows some grouping in profits by year with high profits where expected, such as in 1995 which coincides with high precipitation. However, the high profit years also show a drop off in profit at either the high or low end of the coefficient values, which may suggest that there is another variable we should look at for model sensitivity.
+
+B. The figure shows the profit variability for each year based on changes in price/kg of almonds. The figure suggests that almond price may not be the most sensitive variable in the model and another variable such as precipitation may have a larger impact on the model.
 
 
