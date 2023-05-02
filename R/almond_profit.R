@@ -6,9 +6,9 @@
 #' @return almond yield (ton acre^-1)
 #'
 # function definition
-almond_profit = function(yield_anom, P = 5.95, ) {
+almond_profit = function(yield_anom, price = 5.95) {
   
-  price_ton <- P*1000
+  price_ton <- price*1000
   baseline_p <- price_ton*0.9 #baseline profit ($/acre)
   profit = baseline_p + yield_anom*price_ton
   
