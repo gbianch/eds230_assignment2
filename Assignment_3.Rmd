@@ -43,7 +43,8 @@ pcoeff_sensitivity <- pcoeff1 %>%
   map(~almond_modelR(clim_data = climate, tmincoeff1 = 0.015, tmincoeff2 = 0.0046, pcoeff1 = .x, pcoeff2 = 0.0043)) 
 
 # extract data
-pcoeff_df = map_df(pcoeff_sensitivity,`[`, c("yield", "year", "profit")) 
+pcoeff_df = map_df(pcoeff_sensitivity,`[`, c("yield", "year", "profit")) %>% 
+  mutate(year = as.factor(year))
 pcoeff_df$pcoeff = pcoeff1
 
 ## sensitivity analysis for tcoeff1
@@ -56,7 +57,8 @@ tcoeff1 <-  runif(min=base_tcoeff-deviation*base_tcoeff,
 tcoeff1_sensitivity <- tcoeff1 %>% 
   map(~almond_modelR(clim_data = climate, tmincoeff1 = .x, tmincoeff2 = 0.0046, pcoeff1 = 0.07, pcoeff2 = 0.0043)) 
 
-tcoeff_df <- map_df(tcoeff1_sensitivity,`[`, c("yield", "year", "profit")) 
+tcoeff_df <- map_df(tcoeff1_sensitivity,`[`, c("yield", "year", "profit")) %>% 
+   mutate(year = as.factor(year))
 # add column
 tcoeff_df$tcoeff = tcoeff1
 
@@ -76,15 +78,27 @@ price_df <- map_df(price_sensitivity,`[`, c("yield", "year", "profit")) %>%
  
 
 ```{r}
-# visualize first p coefficient sensitivity
-ggplot(pcoeff_df, aes(y = profit, x = pcoeff)) +
-  geom_point() +
-  labs(x="pcoeff")
+#visualize first precipitation coefficient sensitivity
+#ggplot(pcoeff_df, aes(y = profit, x = pcoeff)) +
+  #geom_point(aes(color = year)) +
+  #labs(x="pcoeff")
 
+#visualize first temperature coefficient sensitivity
+ggplot(tcoeff_df, aes(y = profit, x = tcoeff)) +
+  geom_point(aes(color = year)) +
+  labs(x="temperature coefficient 1")
+
+```
+
+The figure shows almond profits plotted against the distribution of potential values for the first temperature coefficient in the almond yield model. The figure shows some grouping in profits by year with high profits where expected, such as in 1995 which coincides with high precipitation. However, the high profit years also show a drop off in profit at either the high or low end of the coefficient values, which may suggest that there is another variable we should look at for model sensitivity.
+
+```{r}
 # visualize price sensitivity
 ggplot(price_df, aes(y = profit, x = year)) +
   geom_boxplot() +
-  labs(x = "year", 
-       caption = "The figure shows the profit variability for each year based on changes in price/kg of almonds. The figure suggests that almond price may not be the most sensitive variable in the model and another variable such as percipitation may have a larger impact on the model.")
+  labs(x = "year")
 ```
+
+The figure shows the profit variability for each year based on changes in price/kg of almonds. The figure suggests that almond price may not be the most sensitive variable in the model and another variable such as precipitation may have a larger impact on the model.
+
 
